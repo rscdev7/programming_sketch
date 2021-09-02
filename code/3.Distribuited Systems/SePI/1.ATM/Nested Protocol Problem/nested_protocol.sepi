@@ -1,0 +1,47 @@
+new client server: !string.
+&{success: +{ deposit:!integer.?integer.end,
+              withdraw: !integer.?integer.&{
+                     lab : !integer.?string.end,
+                  	 labw: !integer.?string.end
+                  	}
+             },
+  failure: end
+  }
+
+
+client!"pqrts".
+case client of
+	success ->
+		client select withdraw.
+		client!1200 .
+		client?value.
+		printStringLn!("Received Value "++value).
+
+		case client of 
+			lab -> client!400 .client?value.printStringLn!("Received Value "++value)
+			labw -> client!400 .client?value.printStringLn!("Received Value "++value)
+		
+	failure ->
+		printStringLn!("PIN was wrong, retry please")
+
+|
+
+server?pin.
+if pin == "pqrts" then 
+	server select success.
+	
+	case server of
+		deposit -> 
+			server?quantity.
+			server!quantity
+
+		withdraw ->
+			server?quantity.
+			server!quantity.
+
+			server select lab.
+			server?q.
+			server!"ciao"
+		
+else 
+	server select failure

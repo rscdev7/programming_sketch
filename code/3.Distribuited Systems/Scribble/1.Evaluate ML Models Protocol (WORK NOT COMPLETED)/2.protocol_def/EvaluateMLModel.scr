@@ -1,0 +1,39 @@
+module EvaluateMLModel;
+ 
+type <py> "types.IntType"       from "types.py" as Int;
+type <py> "types.StringType"    from "types.py" as String;
+
+global protocol EvaluateMLModel (role client, role evaluator_service, role session_service) {
+
+    rec LOOP {
+
+        evaluation_request(sess_id:Int)                 from client             to evaluator_service;
+
+        choice at evaluator_service {
+            check_session_exists(sess_id:Int)           from evaluator_service  to session_service;
+
+            choice at session_service {
+                fetch_outcome(sess_not_exists:String)                   from session_service  to evaluator_service;
+            } or {
+                fetch_outcome(model_not_available:String)               from session_service  to evaluator_service;
+            } or {
+                fetch_outcome(serialized_database_record:String)        from session_service  to evaluator_service;
+            }
+
+            choice at evaluator_service {
+                request_accepted()              from evaluator_service to client;
+                updated_session_record()        from evaluator_service to session_service;
+            } or {
+                model_not_available()           from evaluator_service to client;
+            } or {
+                session_not_exists()            from evaluator_service to client;
+            }
+
+        } or {
+            req_rejected()                              from evaluator_service  to client;
+        }
+
+        continue LOOP;  
+        
+    }
+}

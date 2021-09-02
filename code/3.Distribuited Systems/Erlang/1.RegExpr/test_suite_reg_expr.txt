@@ -1,0 +1,12 @@
+c(regExpr).
+Z = regExpr:create().
+
+Z!{requestParsing,self(),[a,b,c]}.
+Z!{requestParsing,self(),[a,b,c,a]}.
+Z!{requestParsing,self(),[a,b,c,q]}.
+Z!{requestParsing,self(),[a,b,c,q,z,w,t]}.
+Z!{requestParsing,self(),[q,k,r,q,d]}.
+Z!{requestParsing,self(),[c,b,b,b]}.
+Z!{requestParsing,self(),[c,b,b,b,b]}.
+
+receive {accepted,List} -> ok ; {rejected,List} -> rejected ; X -> X end.

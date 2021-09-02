@@ -1,0 +1,21 @@
+MODULE main
+VAR
+    proc1 : process user();
+    proc2 : process user();
+SPEC
+    AG !(proc1.state = critical & proc2.state = critical)
+MODULE user()
+    VAR
+        state: {idle, normal, critical}; -- s1, s2, s3
+        op : {n, c, e};
+ASSIGN
+    init(state) := idle;
+    next(state) :=
+    case
+        state = idle & op = n : normal;
+        state = normal & op = c : critical;
+        state = critical & op = e : idle;
+        TRUE: state;
+    esac;
+FAIRNESS
+    running

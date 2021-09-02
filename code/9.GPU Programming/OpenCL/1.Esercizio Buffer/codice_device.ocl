@@ -1,0 +1,8 @@
+//Questo kernel inizializza il vettore di input
+kernel void nome_kernel(global int * restrict v1, int numels) {
+	int i = get_global_id(0);
+	if (i >= numels) {
+		return;
+	}
+	v1[i] = i;
+}

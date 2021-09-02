@@ -1,0 +1,2 @@
+Hai sbagliato a passare i parametri per il metodo di bisezione, hai passato a,b anzichè inf-sup
+Nel calcolo della bisezione, hai assegnato come intervalli sempre a-b mentre dovevi mettere a1-b1

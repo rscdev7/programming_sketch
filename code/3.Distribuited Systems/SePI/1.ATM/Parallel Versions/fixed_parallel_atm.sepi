@@ -1,0 +1,106 @@
+type ConcurrentServer = &{
+  						   pin_req: ?string.
+                                    +{	success: 
+                                                & {
+                                                    deposit: ?integer.!integer.ConcurrentServer,
+                                                    withdraw: ?integer.
+                                                            +{ dispense:  ConcurrentServer, 
+                                                               overdraft: ConcurrentServer},
+                                                  	quit: end
+                                                   },  
+                                        failure: ConcurrentServer},
+ 		                    quit: end
+                           }
+  
+
+new server client: ConcurrentServer
+
+//Request 1 - Deposit
+client select pin_req.
+client!"aaa".
+
+case client of
+	success ->
+		client select deposit.
+		client!(500).
+		client?transaction_token.
+		printStringLn!("[CLIENT] Operation Completed - Deposit Value: "++transaction_token).
+		client select quit
+
+	failure ->
+		printStringLn!("[CLIENT] PIN was wrong, retry please").
+		client select pin_req.
+        client!"pqrts".
+
+        case client of
+            success ->
+                client select deposit.
+                client!(500).
+                client?transaction_token.
+                printStringLn!("[CLIENT] Operation Completed - Deposit Value: "++transaction_token).
+				//client select quit
+				
+				//Request 2 - Withdraw
+				client select pin_req.
+                client!"pqrts".
+
+                case client of
+                    success ->
+                        client select withdraw.
+                        client!3000.
+                        case client of
+							overdraft ->
+								printStringLn!("[CLIENT] MoneyAmountError").
+								client select quit
+							dispense ->
+								printStringLn!("[CLIENT] Withdraw Accomplished").
+								client select quit
+
+                    failure ->
+                        printStringLn!("[CLIENT] PIN was wrong, retry please").
+                        client select quit
+
+            failure ->
+              printStringLn!("[CLIENT] PIN was wrong, retry please").
+              client select quit
+
+     
+|
+
+def serverLoop s: ConcurrentServer =
+    case s of    
+		pin_req -> 
+
+            s?pin.
+            if pin == "pqrts" then 
+                s select success.
+
+                case s of
+                    deposit -> 
+                        s?quantity.
+                        s!quantity.
+                        serverLoop!s 
+
+                    withdraw ->
+                        s?quantity.
+
+                        if quantity < 1200 then 
+                            s select dispense.
+                            serverLoop!s
+                        else
+                            s select overdraft.
+                            serverLoop!s
+		
+					quit ->
+						printStringLn!"[SERVER] Session quitted by client"
+
+              else 
+                  s select failure.
+                  printStringLn!("[SERVER] PIN was Wrang, reloading session !").
+				  serverLoop!s
+
+		quit ->
+			printStringLn!("[SERVER] Quitting session")
+  
+                                      
+serverLoop!server                                                                

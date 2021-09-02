@@ -1,0 +1,43 @@
+new client server: !string.
+&{success: +{ deposit:!integer.?integer.end,
+              withdraw: !integer.
+              &{ dispense: end, 
+                 overdraft: end}
+             },
+  failure: end
+  }
+
+
+client!"pqrts".
+case client of
+	success ->
+		client select withdraw.
+		client!1200.
+		
+		case client of
+			dispense  -> printStringLn!"Withdraw accomplished"
+			overdraft -> printStringLn!"Money Error"
+		
+	failure ->
+		printStringLn!("PIN was wrong, retry please")
+
+|
+
+server?pin.
+if pin == "pqrts" then 
+	server select success.
+	
+	case server of
+		deposit -> 
+			server?quantity.
+			server!quantity
+
+		withdraw ->
+			server?quantity.
+			if quantity < 1200 then 
+				server select dispense
+			else
+				server select overdraft
+		
+else 
+	server select failure

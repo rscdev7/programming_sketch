@@ -1,0 +1,28 @@
+MODULE main
+
+    VAR
+        state :{s0,s1,s2,s3,s4,s5,s6};
+
+    ASSIGN
+        init(state) := {s0};
+        next(state) := case
+                            state=s0 : {s1,s2};
+                            state=s1 : s4;
+                            state=s2 : {s5,s0};
+                            state=s3 : {s3,s0,s2};
+                            state=s4 : {s1,s2};
+                            state=s5 : s6;
+                            state=s6 : s3;
+                        esac;
+
+    DEFINE
+        start   := state=s1 | state=s4 | state=s5 | state=s6;
+        close   := state=s2 | state=s3 | state=s4 | state=s5 | state=s6;
+        heat    := state=s3 | state=s6;
+        error   := state=s1 | state=s4;
+
+
+    CTLSPEC AG (heat -> close)
+    CTLSPEC AG (start -> AF heat)
+    CTLSPEC AG ((start & !error) -> AF heat)
+    CTLSPEC AG (error -> EF heat)

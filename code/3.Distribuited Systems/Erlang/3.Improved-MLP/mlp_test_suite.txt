@@ -1,0 +1,18 @@
+- POSITIVE TEST
+c(lin_alg).
+c(mlp).
+MN = mlp:setup().
+REQ = {requestInference, self() , [1,2,5,7]}.
+MN ! REQ.
+receive {error,Input,Error} -> Error ; {result,Input, Output} -> Output end.
+
+- NEGATIVE TEST
+c(lin_alg).
+c(mlp).
+MN = mlp:setup().
+REQ = {requestInference, self() , [6,7]}.
+MN ! REQ.
+receive {error,Input,Error} -> Error ; {result,Input, Output} -> Output end.
+
+- PRINT ON THE CONSOLE
+io:fwrite("Hello world! ~p,~p,~p  ~n", [VS,IDL2,IDL3])

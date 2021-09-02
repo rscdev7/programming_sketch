@@ -1,0 +1,111 @@
+kernel void matinit(global int4 *out,
+	int nrows, int ncols)
+{
+	int c = get_global_id(0);
+	int r = get_global_id(1);
+	if (c >= ncols/4 || r >= nrows)
+		return;
+	int4 v=(int4) (5,6,4,200);
+	out[r*ncols/4+c] = v;
+	//out[r*ncols+c]=7;
+}
+
+kernel void transpose(
+	global const int * restrict in,
+	global int * restrict out,
+	/* numero di righe e di colonne dell'input */
+	int nrows, int ncols)
+{
+	// mappiamo c, r a riga, colonna dell'input
+	int c = get_global_id(0);
+	int r = get_global_id(1);
+
+	if (c >= ncols || r >= nrows)
+		return;
+
+	out[c*nrows+r] = in[r*ncols+c];
+}
+
+// trasposizione vettorizando l'input
+kernel void transpose4(
+	global const int4 * restrict in,
+	global int * restrict out,
+	/* numero di righe e di colonne dell'input */
+	int nrows, int ncols)
+{
+	// mappiamo c, r a riga, colonna dell'input
+	int c = get_global_id(0);
+	int r = get_global_id(1);
+
+	if (c >= ncols/4 || r >= nrows)
+		return;
+
+	int4 colonne = in[r*ncols/4+c];
+
+	out[(c*4 + 0)*nrows+r] = colonne.s0;
+	out[(c*4 + 1)*nrows+r] = colonne.s1;
+	out[(c*4 + 2)*nrows+r] = colonne.s2;
+	out[(c*4 + 3)*nrows+r] = colonne.s3;
+}
+
+
+// trasposizione vettorizando l'input e output
+/*
+kernel void transpose4x4(
+	global const int4 * restrict in,
+	global int4 * restrict out,
+	int nrows, int ncols)
+{
+	int c = get_global_id(0);
+	int r = get_global_id(1);
+
+	if (c >= ncols/4 || r >= nrows/4)
+		return;
+
+	int4 riga0 = in[(4*r + 0)*ncols/4+c];
+	int4 riga1 = in[(4*r + 1)*ncols/4+c];
+	int4 riga2 = in[(4*r + 2)*ncols/4+c];
+	int4 riga3 = in[(4*r + 3)*ncols/4+c];
+
+	out[(c*4 + 0)*nrows/4+r] =
+		(int4)(riga0.s0, riga1.s0, riga2.s0, riga3.s0);
+	out[(c*4 + 1)*nrows/4+r] =
+		(int4)(riga0.s1, riga1.s1, riga2.s1, riga3.s1);
+	out[(c*4 + 2)*nrows/4+r] =
+		(int4)(riga0.s2, riga1.s2, riga2.s2, riga3.s2);
+	out[(c*4 + 3)*nrows/4+r] =
+		(int4)(riga0.s3, riga1.s3, riga2.s3, riga3.s3);
+}
+*/
+// trasposizione vettorizando l'input e output
+
+kernel void transpose4x4(
+	global const int4 * restrict in,
+	global int4 * restrict out,
+	/* numero di righe e di colonne dell'input */
+	int nrows, int ncols)
+{
+	// mappiamo c, r a riga, colonna dell'input
+	int c = get_global_id(0);
+	int r = get_global_id(1);
+	if (c >= ncols/4 || r >= nrows)
+		return;
+	/*
+	int4 riga0 = in[(4*r + 0)*ncols/4+c];
+	int4 riga1 = in[(4*r + 1)*ncols/4+c];
+	int4 riga2 = in[(4*r + 2)*ncols/4+c];
+	int4 riga3 = in[(4*r + 3)*ncols/4+c];
+
+	out[(c*4 + 0)*nrows/4+r] =
+		(int4)(riga0.s0, riga1.s0, riga2.s0, riga3.s0);
+	out[(c*4 + 1)*nrows/4+r] =
+		(int4)(riga0.s1, riga1.s1, riga2.s1, riga3.s1);
+	out[(c*4 + 2)*nrows/4+r] =
+		(int4)(riga0.s2, riga1.s2, riga2.s2, riga3.s2);
+	out[(c*4 + 3)*nrows/4+r] =
+		(int4)(riga0.s3, riga1.s3, riga2.s3, riga3.s3);
+	*/
+	//int4 val=in[r*ncols+c];
+	out [c*nrows+r] = in [r*ncols/4+c];
+	//printf ("r: %d, c: %d X: %d - Y: %d - Z:%d - W:%d \n",r,c,val.x,val.y,val.z,val.w);
+}

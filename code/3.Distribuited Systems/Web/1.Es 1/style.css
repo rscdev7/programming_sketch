@@ -1,0 +1,58 @@
+* {
+    background-color: black;
+    color: white;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: lightskyblue;
+}
+
+.first_line{
+    margin-top: 20px;
+}
+
+.second_line{
+    margin-top: 10px;
+}
+
+.third_line{
+    margin-top: 20px;
+}
+
+input {
+    margin: 10px;
+}
+
+#mail {
+    margin: 10px;
+}
+
+#c_mail{
+    margin: 150px;
+}
+
+#pass{
+    margin:10px;
+}
+
+#c_pass{
+    margin: 128px;
+}
+
+#nome{
+    margin:10px;
+}
+
+#Secondo_Nome{
+    margin:150px;
+}
+
+#Cognome{
+    margin-left:-51px;
+}
+
+#sub{
+    background-color:blue;
+    color: white;
+}
+

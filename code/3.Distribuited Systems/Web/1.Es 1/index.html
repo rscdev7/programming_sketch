@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Hello World</title>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+    </head>
+    <body>
+        <div class="top">
+            Registrazione Utenti
+            <form method="post" action="index.html">
+                <div class="first_line">
+                    <div>
+                        <span id="mail"> Email: </span>
+                        <span id ="c_mail">Conferma Email:</span>
+                    </div>
+                    <input type="email" name="mail" placeholder="Mail"/> 
+                    
+                    <input type="email" name="mail_conf" placeholder="Conferma Mail"/>
+                </div>
+                <div class="second_line">
+                    <div>
+                        <span id="pass"> Password: </span>
+                        <span id ="c_pass">Conferma Password:</span>
+                    </div>
+                    <input type="password" name="pass" placeholder="Password"/>
+                    <input type="password" name="conf_pass" placeholder="Conferma Password"/>
+                </div>
+
+                <hr>
+
+                <div class="third_line">
+                    <div>
+                        <span id="nome"> Nome: </span>
+                        <span id ="Secondo_Nome">Secondo Nome:</span>
+                        <span id="Cognome">Conferma:</span>
+                    </div>
+                    <input type="text" name="nome" placeholder="Nome"/>
+                    <input type="text" name="sec_nome" placeholder="Secondo Nome"/>
+                    <input type="text" name="cognome" placeholder="Cognome"/>
+                </div>
+                <input type="submit" value="Submit" id="sub"/> 
+
+            </form>
+        </div>
+    </body>
+</html>
